@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title>TO DO List</title>
+  </head>
+  <body>
+
+
+
+            <div
+        class="bg-image"
+        style="
+            background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');
+            height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+        "
+        >
+    <div class="container">
+        <h1 class="text-center">
+            My To Do List
+        </h1>
+
+            <div class="form-group">
+              <label for="title" class="form-label">Title</label>
+              <input type="text" class="form-control" id="title">
+            </div>
+            <div class="form-group my-4">
+                <label for="Description" >Descriptions</label>
+                <textarea class="form-control" id="Description" rows="4"></textarea>
+              </div>
+    <div class="text-center">
+            <button type="submit" class="btn btn-primary" id="add">Add To List</button>
+            <button type="submit" class="btn btn-primary" id="clear">Clear List</button>
+</div>
+          <div class="items my-4">
+                <h2>Your Items</h2>
+
+
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">SNo</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tBody"id="tBody">
+                      
+                    </tbody>
+                  </table>
+          </div>
+    </div>
+</div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+
+
+    <script>
+
+        function getAndUpdate(){
+            tit=document.getElementById('title').value;
+            des=document.getElementById('Description').value;
+
+            if(localStorage.getItem('itemsJson')==null){
+                itemsJsonArray=[];
+                itemsJsonArray.push([tit,des]);
+                localStorage.setItem('itemsJson' , JSON.stringify(itemsJsonArray));
+            }
+            else{
+                itemsJsonArrayStr=localStorage.getItem('itemsJson');
+                itemsJsonArray=JSON.parse(itemsJsonArrayStr);
+
+                itemsJsonArray.push([tit,des]);
+                localStorage.setItem('itemsJson' , JSON.stringify(itemsJsonArray));
+            }
+            update();
+        }
+        function update(){
+            //Populate the table
+            let tableBody = document.getElementById('tBody');
+            let str="";
+            itemsJsonArray.forEach((element , index) => {
+                str+=`
+                    <tr>
+                        <th scope="row">${index + 1}</th>
+                        <td>${element[0]}</td>
+                        <td>${element[1]}</td>
+                        <td><button type="button" class="btn btn-primary" onclick="Delete(${index})">Delete</button></td>
+                    </tr>
+                `;
+            });
+            tableBody.innerHTML=str;
+        }
+        add=document.getElementById("add");
+        add.addEventListener("click" , getAndUpdate)
+
+        //update();
+
+        function Delete(index){
+            console.log('deleted' , index)
+                itemsJsonArrayStr=localStorage.getItem('itemsJson');
+                itemsJsonArray=JSON.parse(itemsJsonArrayStr);
+
+                itemsJsonArray.splice(index,1);
+                localStorage.setItem('itemsJson' , JSON.stringify(itemsJsonArray));
+                update();
+
+        }
+        function deleteall(){
+            itemsJsonArrayStr=localStorage.getItem('itemsJson');
+            itemsJsonArray=JSON.parse(itemsJsonArrayStr);
+
+            itemsJsonArray.splice(0);
+            localStorage.setItem('itemsJson' , JSON.stringify(itemsJsonArray));
+            update();
+
+        }
+        del=document.getElementById("clear");
+        del.addEventListener("click" , deleteall)
+        
+        </script>
+  </body>
+</html>
